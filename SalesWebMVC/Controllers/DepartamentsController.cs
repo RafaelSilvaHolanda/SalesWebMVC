@@ -28,11 +28,6 @@ namespace SalesWebMVC.Controllers
         // GET: Departaments/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var departament = await _context.Departament
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (departament == null)
@@ -68,11 +63,6 @@ namespace SalesWebMVC.Controllers
         // GET: Departaments/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var departament = await _context.Departament.FindAsync(id);
             if (departament == null)
             {
@@ -88,11 +78,6 @@ namespace SalesWebMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Departament departament)
         {
-            if (id != departament.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
                 try
@@ -119,17 +104,12 @@ namespace SalesWebMVC.Controllers
         // GET: Departaments/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var departament = await _context.Departament
+           var departament = await _context.Departament
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (departament == null)
-            {
+           if (departament == null)
+           {
                 return NotFound();
-            }
+           }
 
             return View(departament);
         }
