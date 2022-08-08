@@ -19,5 +19,20 @@ namespace SalesWebMVC.Controllers {
             var sellers = _sellerService.GetSellersFromDB();
             return View(sellers);
         }
+
+        public IActionResult Create() {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(Seller seller) {
+            if (ModelState.IsValid) {
+                _sellerService.SaveInDatabase(seller);
+                return RedirectToAction(nameof(Index));
+            }
+            return View(seller);
+
+        }
     }
 }

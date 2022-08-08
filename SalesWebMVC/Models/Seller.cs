@@ -16,8 +16,7 @@ namespace SalesWebMVC.Models {
         [RegularExpression(@"\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*", ErrorMessage = "Digite um email válido")]
         public string Email { get; set; }
         
-        [Required]
-        [RegularExpression(@"/^\d{4}/(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/", ErrorMessage = "Digite uma data no formato YYYY/MM/DD")]
+        [Required]        
         public DateTime BirthDate { get; set; }
         
         [Required]

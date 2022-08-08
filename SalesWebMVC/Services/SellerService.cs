@@ -16,5 +16,10 @@ namespace SalesWebMVC.Services {
         public List<Seller> GetSellersFromDB() {
             return _context.Seller.ToList();
         }
+
+        public void SaveInDatabase(Seller seller) {
+            _context.Add(seller);
+            _context.SaveChanges();
+        }
     }
 }
