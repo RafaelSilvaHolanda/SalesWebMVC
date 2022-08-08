@@ -22,7 +22,7 @@ namespace SalesWebMVC.Controllers
         // GET: Departments
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Departament.ToListAsync());
+            return View(await _context.Department.ToListAsync());
         }
 
         // GET: Departments/Details/5
@@ -33,7 +33,7 @@ namespace SalesWebMVC.Controllers
                 return NotFound();
             }
 
-            var department = await _context.Departament
+            var department = await _context.Department
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (department == null)
             {
@@ -73,7 +73,7 @@ namespace SalesWebMVC.Controllers
                 return NotFound();
             }
 
-            var department = await _context.Departament.FindAsync(id);
+            var department = await _context.Department.FindAsync(id);
             if (department == null)
             {
                 return NotFound();
@@ -124,7 +124,7 @@ namespace SalesWebMVC.Controllers
                 return NotFound();
             }
 
-            var department = await _context.Departament
+            var department = await _context.Department
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (department == null)
             {
@@ -139,15 +139,15 @@ namespace SalesWebMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var department = await _context.Departament.FindAsync(id);
-            _context.Departament.Remove(department);
+            var department = await _context.Department.FindAsync(id);
+            _context.Department.Remove(department);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool DepartmentExists(int id)
         {
-            return _context.Departament.Any(e => e.Id == id);
+            return _context.Department.Any(e => e.Id == id);
         }
     }
 }
