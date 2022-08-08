@@ -24,6 +24,7 @@ namespace SalesWebMVC.Models {
         public double Salary { get; set; }
 
         public Department Departament { get; set; }
+        public int DepartmentId { get; set; }
         public List<SalesRecord> Sales { get; private set; } = new List<SalesRecord>();
 
         public Seller() {
