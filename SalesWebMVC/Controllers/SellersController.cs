@@ -30,13 +30,34 @@ namespace SalesWebMVC.Controllers {
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(SellerFormViewModel form) {
+        public IActionResult Create(SellerFormViewModel) {
             if (ModelState.IsValid) {
                 _sellerService.SaveInDatabase(form.Seller);
                 return RedirectToAction(nameof(Index));
             }
             return View(form);
 
+        }
+
+        public IActionResult Delete(int? id) {
+            
+            if (id == null) {
+                return NotFound();
+            }
+            var obj = _sellerService.FindSellerById(id.Value);
+
+            if (obj == null) {
+                return NotFound();
+            }
+            return View(obj);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(int id) {
+
+            _sellerService.TryRemoveSeller(id);
+            return RedirectToAction(nameof(Index));
         }
     }
 }
