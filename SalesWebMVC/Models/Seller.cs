@@ -23,7 +23,7 @@ namespace SalesWebMVC.Models {
         [Range(1000, double.MaxValue, ErrorMessage = "O Salário precisa ser acima de 1000.00 reais")]
         public double Salary { get; set; }
 
-        public Department Departament { get; set; }
+        public Department Department { get; set; }
         public int DepartmentId { get; set; }
         public List<SalesRecord> Sales { get; private set; } = new List<SalesRecord>();
 
@@ -36,7 +36,7 @@ namespace SalesWebMVC.Models {
             Email = email;
             BirthDate = birthDate;
             Salary = salary;
-            Departament = departament;
+            Department = departament;
         }
 
         public void AddSales(SalesRecord sale) {

@@ -7,6 +7,7 @@ using SalesWebMVC.Services;
 using SalesWebMVC.Models;
 using SalesWebMVC.Models.ViewModels;
 
+
 namespace SalesWebMVC.Controllers {
     public class SellersController : Controller {
 
@@ -30,7 +31,7 @@ namespace SalesWebMVC.Controllers {
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(SellerFormViewModel) {
+        public IActionResult Create(SellerFormViewModel form) {
             if (ModelState.IsValid) {
                 _sellerService.SaveInDatabase(form.Seller);
                 return RedirectToAction(nameof(Index));
@@ -58,6 +59,19 @@ namespace SalesWebMVC.Controllers {
 
             _sellerService.TryRemoveSeller(id);
             return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult Details(int? id) {
+
+            if (id == null) {
+                return NotFound();
+            }
+            var obj = _sellerService.FindSellerById(id.Value);
+
+            if (obj == null) {
+                return NotFound();
+            }
+            return View(obj);
         }
     }
 }
