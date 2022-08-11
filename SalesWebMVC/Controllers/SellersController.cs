@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using SalesWebMVC.Services;
 using SalesWebMVC.Models;
 using SalesWebMVC.Models.ViewModels;
-
+using SalesWebMVC.Services.Exceptions;
 
 namespace SalesWebMVC.Controllers {
     public class SellersController : Controller {
@@ -41,16 +41,13 @@ namespace SalesWebMVC.Controllers {
         }
 
         public IActionResult Delete(int? id) {
-            
-            if (id == null) {
-                return NotFound();
-            }
-            var obj = _sellerService.FindSellerById(id.Value);
 
-            if (obj == null) {
+            if (!ValidSeller(id)) {
                 return NotFound();
             }
-            return View(obj);
+            var seller = _sellerService.FindSellerById(id.Value);
+
+            return View(seller);
         }
 
         [HttpPost]
@@ -61,17 +58,59 @@ namespace SalesWebMVC.Controllers {
             return RedirectToAction(nameof(Index));
         }
 
+
+
         public IActionResult Details(int? id) {
 
-            if (id == null) {
-                return NotFound();
-            }
-            var obj = _sellerService.FindSellerById(id.Value);
+            return View();
+        }
 
-            if (obj == null) {
+        public IActionResult Edit(int? id) {
+
+            if (!ValidSeller(id)) {
                 return NotFound();
             }
-            return View(obj);
+
+            var seller = _sellerService.FindSellerById(id.Value);
+            var departments = _departmentService.GetDepartmentsFromDB();
+            return View(new SellerFormViewModel(seller, departments));
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(Seller seller) {
+            if (ModelState.IsValid) {
+
+                return UpdatingSeller(seller);
+
+            }
+            var departments = _departmentService.GetDepartmentsFromDB();            
+            return View(new SellerFormViewModel(seller, departments));
+
+        }
+
+        private IActionResult UpdatingSeller(Seller seller) {
+            try {
+                _sellerService.TryUpdateSeller(seller);
+
+            } catch (DbConcurrencyException e) {
+                return NotFound();
+            } catch (NotFoundException e) {
+                return BadRequest();
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        private Boolean ValidSeller(int? id) {
+            Boolean valid = false;
+
+            if (id != null) {
+                if (_sellerService.SellerInDatabase(id.Value)) {
+                    valid = true;
+                }
+            }
+            return valid;
         }
     }
 }

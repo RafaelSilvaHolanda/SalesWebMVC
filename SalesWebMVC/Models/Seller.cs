@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 namespace SalesWebMVC.Models {
     public class Seller {
         [Key]
-        public int Id { get;private set; }
+        public int Id { get; set; }
 
         [Required]
         [RegularExpression(@"[a-zA-Z\s]{5,30}", ErrorMessage = "O nome deve conter somente Letras de 5 a 30 caracteres")]
@@ -38,6 +38,7 @@ namespace SalesWebMVC.Models {
             Salary = salary;
             Department = departament;
         }
+
 
         public void AddSales(SalesRecord sale) {
             Sales.Add(sale);
