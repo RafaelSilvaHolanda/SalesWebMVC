@@ -32,12 +32,13 @@ namespace SalesWebMVC.Controllers {
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(SellerFormViewModel form) {
+        public IActionResult Create(Seller seller) {
             if (ModelState.IsValid) {
-                _sellerService.SaveInDatabase(form.Seller);
+                _sellerService.SaveInDatabase(seller);
                 return RedirectToAction(nameof(Index));
             }
-            return View(form);
+            var departments = _departmentService.GetDepartmentsFromDB();
+            return View(new SellerFormViewModel(seller, departments));
 
         }
 

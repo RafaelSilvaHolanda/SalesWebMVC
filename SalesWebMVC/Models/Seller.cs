@@ -8,24 +8,28 @@ namespace SalesWebMVC.Models {
         [Key]
         public int Id { get; set; }
 
-        [Required]
+        [Display(Name = "Nome")]
+        [Required(ErrorMessage ="É necessário preencher o {0}")]
         [RegularExpression(@"[a-zA-Z\s]{5,30}", ErrorMessage = "O nome deve conter somente Letras de 5 a 30 caracteres")]
         public string Name { get; set; }
-        
-        [Required]
+
+        [Display(Name="E-mail")]
+        [Required(ErrorMessage = "É necessário preencher o {0}")]
         [RegularExpression(@"\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*", ErrorMessage = "Digite um email válido")]
         public string Email { get; set; }
         
-        [Display(Name = "Birth Date")]
+        [Display(Name = "Data de aniversário")]
         [DataType(DataType.Date)]
-        [Required]        
+        [Required(ErrorMessage = "É necessário preencher a {0}")]
         public DateTime BirthDate { get; set; }
         
-        [Required]
+        [Display(Name="Salário")]
+        [Required(ErrorMessage = "É necessário preencher o {0}")]
         [DisplayFormat(DataFormatString = "{0:F2}")]
         [Range(1000, double.MaxValue, ErrorMessage = "O Salário precisa ser acima de 1000.00 reais")]
         public double Salary { get; set; }
 
+        [Display(Name="Departamento")]
         public Department Department { get; set; }
         public int DepartmentId { get; set; }
         public List<SalesRecord> Sales { get; private set; } = new List<SalesRecord>();
