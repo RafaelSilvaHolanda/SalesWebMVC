@@ -7,6 +7,7 @@ using SalesWebMVC.Services;
 using SalesWebMVC.Models;
 using SalesWebMVC.Models.ViewModels;
 using SalesWebMVC.Services.Exceptions;
+using System.Diagnostics;
 
 namespace SalesWebMVC.Controllers {
     public class SellersController : Controller {
@@ -43,7 +44,7 @@ namespace SalesWebMVC.Controllers {
         public IActionResult Delete(int? id) {
 
             if (!ValidSeller(id)) {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id not found" });
             }
             var seller = _sellerService.FindSellerById(id.Value);
 
@@ -62,13 +63,17 @@ namespace SalesWebMVC.Controllers {
 
         public IActionResult Details(int? id) {
 
-            return View();
+            if (!ValidSeller(id)) {
+                return RedirectToAction(nameof(Error), new {message =  "Id not found"});
+            }
+            var seller = _sellerService.FindSellerById(id.Value);
+            return View(seller);
         }
 
         public IActionResult Edit(int? id) {
 
             if (!ValidSeller(id)) {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id not found" });
             }
 
             var seller = _sellerService.FindSellerById(id.Value);
@@ -82,7 +87,7 @@ namespace SalesWebMVC.Controllers {
         public IActionResult Edit(Seller seller) {
             if (ModelState.IsValid) {
 
-                return UpdatingSeller(seller);
+                return TryUpdatingSellerPage(seller);
 
             }
             var departments = _departmentService.GetDepartmentsFromDB();            
@@ -90,14 +95,14 @@ namespace SalesWebMVC.Controllers {
 
         }
 
-        private IActionResult UpdatingSeller(Seller seller) {
+        private IActionResult TryUpdatingSellerPage(Seller seller) {
             try {
                 _sellerService.TryUpdateSeller(seller);
 
-            } catch (DbConcurrencyException e) {
-                return NotFound();
-            } catch (NotFoundException e) {
-                return BadRequest();
+            } catch (ApplicationException e) {
+                return RedirectToAction(nameof(Error), new { message = e.Message });
+            } catch (Exception) {
+                return RedirectToAction(nameof(Error), new { message = "Unexpected Error" });
             }
             return RedirectToAction(nameof(Index));
         }
@@ -111,6 +116,12 @@ namespace SalesWebMVC.Controllers {
                 }
             }
             return valid;
+        }
+
+        public IActionResult Error(string message) {
+            var viewModel = new ErrorViewModel(Activity.Current?.Id ?? HttpContext.TraceIdentifier,message);
+
+            return View(viewModel);
         }
     }
 }

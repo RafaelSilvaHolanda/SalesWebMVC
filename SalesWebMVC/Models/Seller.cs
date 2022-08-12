@@ -27,8 +27,7 @@ namespace SalesWebMVC.Models {
         public int DepartmentId { get; set; }
         public List<SalesRecord> Sales { get; private set; } = new List<SalesRecord>();
 
-        public Seller() {
-                
+        public Seller() {            
         }
 
         public Seller(string name, string email, DateTime birthDate, double salary, Department departament) {
@@ -39,7 +38,7 @@ namespace SalesWebMVC.Models {
             Department = departament;
         }
 
-
+       
         public void AddSales(SalesRecord sale) {
             Sales.Add(sale);
         }
