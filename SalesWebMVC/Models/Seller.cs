@@ -16,10 +16,13 @@ namespace SalesWebMVC.Models {
         [RegularExpression(@"\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*", ErrorMessage = "Digite um email válido")]
         public string Email { get; set; }
         
+        [Display(Name = "Birth Date")]
+        [DataType(DataType.Date)]
         [Required]        
         public DateTime BirthDate { get; set; }
         
         [Required]
+        [DisplayFormat(DataFormatString = "{0:F2}")]
         [Range(1000, double.MaxValue, ErrorMessage = "O Salário precisa ser acima de 1000.00 reais")]
         public double Salary { get; set; }
 
