@@ -56,12 +56,23 @@ namespace SalesWebMVC.Controllers {
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id) {
 
-            await _sellerService.TryRemoveSellerAsync(id);
-            return RedirectToAction(nameof(Index));
+            
+            return await TryDeletingSeller(id);
         }
 
 
+        public async Task<IActionResult> TryDeletingSeller(int id) {
+            
+            try{
+                await _sellerService.TryRemoveSellerAsync(id);
+            } catch (IntegrityException e) {
+                return RedirectToAction(nameof(Error), new { message = e.Message });
+            }catch (Exception e) {
+                return RedirectToAction(nameof(Error), new { message = "Unexpected Error" });
+            }
+            return RedirectToAction(nameof(Index));
 
+        }
         public async Task<IActionResult> Details(int? id) {
 
             if (!(await ValidSeller(id))) {

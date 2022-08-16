@@ -9,15 +9,15 @@ namespace SalesWebMVC.Models {
         public int Id { get;private set; }
 
         [Required]
-        [RegularExpression(@"/^\d{4}/(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/", ErrorMessage = "Digite uma data no formato YYYY/MM/DD")]
+        [DataType(DataType.Date)]
         public DateTime Date { get; private set; }
 
         [Required]
-        [RegularExpression(@"[0-9.]")]
+        [RegularExpression(@"[0-9,]")]
         public double Amount { get; private set; }
         [Required]
         public SaleStatus Status { get; set; }
-
+        [Required]
         public Seller Seller { get; set; }
 
         public SalesRecord() {

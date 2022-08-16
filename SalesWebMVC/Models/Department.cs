@@ -9,7 +9,7 @@ namespace SalesWebMVC.Models {
         [Key]
         public int Id { get; private set; }
 
-        [Required]
+        [Required(ErrorMessage ="O nome do Campo deve ser preenchido")]
         [RegularExpression(@"[a-zA-Z\s]{5,30}", ErrorMessage = "Nome deve possuir somente Letras de 5 a 30 caracteres")]
         public string Name { get; set; }
 

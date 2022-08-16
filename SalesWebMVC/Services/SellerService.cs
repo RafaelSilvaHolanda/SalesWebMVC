@@ -38,9 +38,14 @@ namespace SalesWebMVC.Services {
            
         }
 
-        private async Task RemoveSellerFromDatabaseAsync(Seller seller) {
-            _context.Remove(seller);
-            await _context.SaveChangesAsync();
+        private async Task RemoveSellerFromDatabaseAsync(Seller seller) {            
+            try {
+                _context.Remove(seller);
+                await _context.SaveChangesAsync();
+            } catch (DbUpdateException) {
+                throw new IntegrityException("O vendedor, possui vendas cadastradas");
+            }
+            
         }
 
        
