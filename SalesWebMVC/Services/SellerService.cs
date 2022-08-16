@@ -14,52 +14,53 @@ namespace SalesWebMVC.Services {
             _context = context;
         }
 
-        public List<Seller> GetSellersFromDB() {
-            return _context.Seller.Include(x=>x.Department).ToList();
+        public async Task<List<Seller>> GetSellersFromDbAsync() {
+            return await _context.Seller.Include(x=>x.Department).ToListAsync();
         }
 
-        public void SaveInDatabase(Seller seller) {
+        public async Task SaveInDatabaseAsync(Seller seller) {
             _context.Add(seller);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public Seller FindSellerById(int id) {
-            return _context.Seller.Include(x=> x.Department).FirstOrDefault(x => x.Id == id);
+        public async Task<Seller> FindSellerByIdAsync(int id) {
+            return await _context.Seller.Include(x=> x.Department).FirstOrDefaultAsync(x => x.Id == id);
         }
 
 
-        public void TryRemoveSeller(int id) {
-            Seller seller = FindSellerById(id);
+        public async Task TryRemoveSellerAsync(int id) {
+
+            var seller = await FindSellerByIdAsync(id);
 
             if (seller != null) {
-                RemoveSellerFromDatabase(seller);
+                await RemoveSellerFromDatabaseAsync(seller);
             }
            
         }
 
-        private void RemoveSellerFromDatabase(Seller seller) {
+        private async Task RemoveSellerFromDatabaseAsync(Seller seller) {
             _context.Remove(seller);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
        
-        public void TryUpdateSeller(Seller seller) {
+        public async Task TryUpdateSellerAsync(Seller seller) {
 
-            if (!SellerInDatabase(seller.Id)) {
+            if (!(await SellerInDatabaseAsync(seller.Id))) {
                 throw new NotFoundException("O vendedor não está cadastrado");
             }
-            UpdateDatabase(seller);
+            await UpdateDatabaseAsync(seller);
             
         }
 
-        public Boolean SellerInDatabase(int id) {
-            return _context.Seller.Any(x => x.Id == id);
+        public async Task<Boolean> SellerInDatabaseAsync(int id) {
+            return await _context.Seller.AnyAsync(x => x.Id == id);
         }
 
-        private void UpdateDatabase(Seller seller) {
+        private async Task UpdateDatabaseAsync(Seller seller) {
             try {
                 _context.Update(seller);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }catch (DbUpdateConcurrencyException e) {
                 throw new DbConcurrencyException(e.Message);
             }

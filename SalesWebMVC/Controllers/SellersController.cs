@@ -19,86 +19,86 @@ namespace SalesWebMVC.Controllers {
             _departmentService = departmentService;
         }
 
-        public IActionResult Index() {
-            var sellers = _sellerService.GetSellersFromDB();
+        public async Task<IActionResult> Index() {
+            var sellers = await _sellerService.GetSellersFromDbAsync();
             return View(sellers);
         }
 
-        public IActionResult Create() {
-            var departments = _departmentService.GetDepartmentsFromDB();
+        public async Task<IActionResult> Create() {
+            var departments = await _departmentService.GetDepartmentsFromDbAsync();
             var viewModel = new SellerFormViewModel(departments);
             return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Seller seller) {
+        public async Task<IActionResult> Create(Seller seller) {
             if (ModelState.IsValid) {
-                _sellerService.SaveInDatabase(seller);
+                await _sellerService.SaveInDatabaseAsync(seller);
                 return RedirectToAction(nameof(Index));
             }
-            var departments = _departmentService.GetDepartmentsFromDB();
+            var departments = await _departmentService.GetDepartmentsFromDbAsync();
             return View(new SellerFormViewModel(seller, departments));
 
         }
 
-        public IActionResult Delete(int? id) {
+        public async Task<IActionResult> Delete(int? id) {
 
-            if (!ValidSeller(id)) {
+            if (!(await ValidSeller(id))) {
                 return RedirectToAction(nameof(Error), new { message = "Id not found" });
             }
-            var seller = _sellerService.FindSellerById(id.Value);
+            var seller = await _sellerService.FindSellerByIdAsync(id.Value);
 
             return View(seller);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id) {
+        public async Task<IActionResult> Delete(int id) {
 
-            _sellerService.TryRemoveSeller(id);
+            await _sellerService.TryRemoveSellerAsync(id);
             return RedirectToAction(nameof(Index));
         }
 
 
 
-        public IActionResult Details(int? id) {
+        public async Task<IActionResult> Details(int? id) {
 
-            if (!ValidSeller(id)) {
+            if (!(await ValidSeller(id))) {
                 return RedirectToAction(nameof(Error), new {message =  "Id not found"});
             }
-            var seller = _sellerService.FindSellerById(id.Value);
+            var seller = await _sellerService.FindSellerByIdAsync(id.Value);
             return View(seller);
         }
 
-        public IActionResult Edit(int? id) {
+        public async Task<IActionResult> Edit(int? id) {
 
-            if (!ValidSeller(id)) {
+            if (!(await ValidSeller(id))){
                 return RedirectToAction(nameof(Error), new { message = "Id not found" });
             }
 
-            var seller = _sellerService.FindSellerById(id.Value);
-            var departments = _departmentService.GetDepartmentsFromDB();
+            var seller = await _sellerService.FindSellerByIdAsync(id.Value);
+            var departments = await _departmentService.GetDepartmentsFromDbAsync();
             return View(new SellerFormViewModel(seller, departments));
         }
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Seller seller) {
+        public async Task<IActionResult> Edit(Seller seller) {
             if (ModelState.IsValid) {
 
-                return TryUpdatingSellerPage(seller);
+                return await TryUpdatingSellerPage(seller);
 
             }
-            var departments = _departmentService.GetDepartmentsFromDB();            
+            List<Department> departments = await _departmentService.GetDepartmentsFromDbAsync();            
             return View(new SellerFormViewModel(seller, departments));
 
         }
 
-        private IActionResult TryUpdatingSellerPage(Seller seller) {
+        private async Task<IActionResult> TryUpdatingSellerPage(Seller seller) {
             try {
-                _sellerService.TryUpdateSeller(seller);
+                await _sellerService.TryUpdateSellerAsync(seller);
 
             } catch (ApplicationException e) {
                 return RedirectToAction(nameof(Error), new { message = e.Message });
@@ -108,11 +108,11 @@ namespace SalesWebMVC.Controllers {
             return RedirectToAction(nameof(Index));
         }
 
-        private Boolean ValidSeller(int? id) {
+        private async Task<Boolean> ValidSeller(int? id) {
             Boolean valid = false;
 
             if (id != null) {
-                if (_sellerService.SellerInDatabase(id.Value)) {
+                if (await _sellerService.SellerInDatabaseAsync(id.Value)) {
                     valid = true;
                 }
             }
