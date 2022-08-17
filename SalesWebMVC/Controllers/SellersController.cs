@@ -67,7 +67,7 @@ namespace SalesWebMVC.Controllers {
                 await _sellerService.TryRemoveSellerAsync(id);
             } catch (IntegrityException e) {
                 return RedirectToAction(nameof(Error), new { message = e.Message });
-            }catch (Exception e) {
+            }catch (Exception) {
                 return RedirectToAction(nameof(Error), new { message = "Unexpected Error" });
             }
             return RedirectToAction(nameof(Index));

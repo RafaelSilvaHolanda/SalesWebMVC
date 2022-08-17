@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SalesWebMVC.Services;
+using SalesWebMVC.Models;
 namespace SalesWebMVC.Controllers {
     public class SalesRecordsController : Controller {
 
@@ -22,8 +23,10 @@ namespace SalesWebMVC.Controllers {
 
             return View(sales);
         }
-        public async Task<IActionResult> GroupSearch() {
-            return View();
+        public async Task<IActionResult> GroupSearch(DateTime? minDate, DateTime? maxDate) {
+            var sales = await _salesRecordService.FindSalesAgroupedAsync(minDate, maxDate);
+            SetDateOrDefault(minDate, maxDate);
+            return View(sales);
         }
 
         private void SetDateOrDefault(DateTime? minDate, DateTime? maxDate) {
@@ -37,5 +40,6 @@ namespace SalesWebMVC.Controllers {
             ViewData["maxDate"] = maxDate.Value.ToString("yyyy-MM-dd");
 
         }
+
     }
 }

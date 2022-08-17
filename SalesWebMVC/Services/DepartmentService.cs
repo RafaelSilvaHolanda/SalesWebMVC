@@ -21,5 +21,7 @@ namespace SalesWebMVC.Services {
             _context.Add(department);
             _context.SaveChanges();
         }
+
+
     }
 }
