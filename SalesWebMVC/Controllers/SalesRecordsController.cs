@@ -24,7 +24,7 @@ namespace SalesWebMVC.Controllers {
             return View(sales);
         }
         public async Task<IActionResult> GroupSearch(DateTime? minDate, DateTime? maxDate) {
-            var sales = await _salesRecordService.FindSalesAgroupedAsync(minDate, maxDate);
+            var sales = await _salesRecordService.GetGroupedSales(minDate, maxDate);
             SetDateOrDefault(minDate, maxDate);
             return View(sales);
         }

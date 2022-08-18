@@ -36,28 +36,16 @@ namespace SalesWebMVC.Services {
 
        
 
-        public async Task<List<Department>> FindSalesAgroupedAsync(DateTime? minDate, DateTime? maxDate){
+        public async Task<List<Department>> GetGroupedSales(DateTime? minDate, DateTime? maxDate){
             var salesRecords = await GetSalesFromDb(minDate, maxDate).ToListAsync();
             var departments = OrganizeByDepartment(salesRecords);
 
-                return await departments;
+            return departments;
         }
-        private async Task<List<Department>> OrganizeByDepartment(List<SalesRecord> saleRecords) {
+        private static List<Department> OrganizeByDepartment(List<SalesRecord> salesRecords) {                      
 
-            var departmentReference = new List<Department>();
-
-            var allDepartments = await _context.Department.Select(x => x).ToListAsync();
-
-            foreach (var department in allDepartments) {
-
-                foreach (var sale in saleRecords) {
-                    if (department.Name == sale.Seller.Department.Name) {
-                        departmentReference.Add(sale.Seller.Department);
-                        break;
-                    }
-                }
-            }
-            return departmentReference;
+             return salesRecords.Select(x => x.Seller.Department).Distinct().ToList();
+             
         }
 
 
